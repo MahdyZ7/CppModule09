@@ -1,3 +1,9 @@
+# other files
+.replit
+.vscode
+replit.nix
+.DS*
+
 # Prerequisites
 *.d
 
