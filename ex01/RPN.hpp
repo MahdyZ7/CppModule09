@@ -9,16 +9,17 @@
 
 class RPN
 {
-	RPN();
-	RPN(const RPN& other);
-	RPN(const std::string& str);
+	public:
+		RPN();
+		RPN(const RPN& other);
+		RPN(const std::string& str);
+		~RPN();
 
-	RPN& operator=(const  RPN&other);
-	~RPN();
+		RPN& operator=(const  RPN&other);
 
+		void postfix();
 	private:
 		std::string exp;
-		int result;
 
 };
 #endif

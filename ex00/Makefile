@@ -6,13 +6,13 @@
 #    By: ayassin <ayassin@student.42abudhabi.ae>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/24 18:00:42 by ayassin           #+#    #+#              #
-#    Updated: 2023/06/24 19:59:52 by ayassin          ###   ########.fr        #
+#    Updated: 2023/06/24 21:38:19 by ayassin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = RPN
+NAME = btc
 
-SRC = RPN.cpp main.cpp
+SRC = BitcoinExchange.cpp main.cpp
 
 CC = c++
 
