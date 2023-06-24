@@ -1,11 +1,11 @@
 #include "RPN.hpp"
 
 RPN::RPN(void): exp("") , result(0){}
-RPN::RPN(cosnt std::string& str): exp(str)
+RPN::RPN(const std::string& str): exp(str)
 {
 
 }
-RPN::RPN(const RPN& other): exp(other.str), result(other.result){}
+RPN::RPN(const RPN& other): exp(other.exp), result(other.result){}
 
 bool valid_input(std::string str)
 {
@@ -77,5 +77,5 @@ int main(int argv, char **argc)
 		if (s.size() != 1)
 			std::cout << "Expression in invalid\n";
 		else
-			std::cout << s.top();
+			std::cout << s.top() << std::endl;
 }
