@@ -8,10 +8,10 @@
 #include <sstream>
 #include <sys/stat.h>
 
-
-
+#define  datafile "data.csv"
 
 typedef std::map<std::string , double, std::greater<std::string> > mymap;
+
 class BTC
 {
 	public:
@@ -22,11 +22,14 @@ class BTC
 
 		BTC &operator=(const BTC& other);
 
-		void convert(const std::string& file);
+		void convert(const std::string& file) const;
 		void populateMap(const std::string& file);
+		double getRate(const std::string& str) const;
 	
 	private:
-		#define  datafile "data.csv"
+		static float isFloat(const std::string& str, bool max);
+		static bool isDate(const std::string& str);
+		static bool isValidDate(const std::string& str);
 		mymap m;
 };
 

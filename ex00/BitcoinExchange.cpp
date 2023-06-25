@@ -23,8 +23,9 @@ BTC &BTC::operator=(const BTC& other)
 void BTC::populateMap(const std::string& file)
 {
 	std::string line, date, rate;
-	std::fstream exrate(file, std::ios::in);
+	std::fstream exrate(&file[0], std::ios::in);
 	struct stat buffer;
+	double d;
 
 	stat(file.c_str(), &buffer);
 	if (S_ISREG(buffer.st_mode) && exrate.is_open())
@@ -35,22 +36,29 @@ void BTC::populateMap(const std::string& file)
     		std::stringstream str(line);
 			getline(str, date, ',');
 			getline(str, rate, ',');
-			m[date] = std::stod(rate);
+			if (!(isDate(date) && isFloat(rate, false) >= 0 && isValidDate(date)))
+			{
+				std::cout << "Invalid: " << date << " " << rate;
+				throw(std::invalid_argument("Error: database is corrupt"));
+			}
+			std::stringstream(rate) >> d;
+			m[date] = d;
 		}
 		exrate.close();
 		return;
 	}
-	throw("Invalid database \"" + file + "\"\n");
-	
+	throw(std::invalid_argument("Error: could not open file."));
 }
 
-static float isfloat(std::string str)
+float BTC::isFloat(const std::string& str, bool max)
 {
 	int		num;
 	size_t	dec = 0;
 
 	for(int i = 0; str[i]; ++i)
 	{
+		if (str[i] == '-' && i == 0)
+			continue;
 		if (std::isdigit(str[i]))
 			continue;
 		else if (str[i] == '.' && dec == 0)
@@ -58,17 +66,17 @@ static float isfloat(std::string str)
 			++dec;
 			continue;
 		}
-		return -1;
+		throw(std::invalid_argument("Error: not a number"));
 	}
-	num = std::stof(str);
+	std::stringstream(str) >> num;
 	if (num < 0)
-		return(-2);
-	else if (num > 1000.0)
-		return -3;
+		throw(std::invalid_argument("Error: not a positive number."));
+	else if (num > 1000.0 && max)
+		throw(std::invalid_argument("Error: too large a number."));
 	return num;
 }
 
-static bool isvaliddate(std::string str)
+bool BTC::isValidDate(const std::string& str)
 {
 	std::string			word;
 	int					date[3]; 
@@ -79,7 +87,7 @@ static bool isvaliddate(std::string str)
 		std::getline(ss, word, '-');
 		std::stringstream s_temp(word);
 		s_temp >> date[i];
-		if (date[i] <= 0)
+		if (date[i] <= 0 && i != 0)
 			return false;
 	}
 	if (date[1] > 12 || date[2] > 31)
@@ -96,7 +104,8 @@ static bool isvaliddate(std::string str)
 		return false;
 	return true;
 }
-static bool isdate(std::string str)
+
+bool BTC::isDate(const std::string& str)
 {
 	size_t	dash = 0;
 	size_t	i = 0;
@@ -125,16 +134,24 @@ static bool isdate(std::string str)
 	return true;
 }
 
-void BTC::convert(const std::string& file)
+double BTC::getRate(const std::string& date) const
+{
+	mymap::const_iterator it = m.lower_bound(date);
+	if (it == m.end())
+		return 0;
+	return it->second;
+}
+
+void BTC::convert(const std::string& file) const
 {
 	std::string line, date, stramount;
-	std::fstream exrate(file, std::ios::in);
+	std::fstream exrate(&file[0], std::ios::in);
 	struct stat buffer;
 
 	stat(file.c_str(), &buffer);
 	if (!(S_ISREG(buffer.st_mode) && exrate.is_open()))
 	{
-		std::cout << "\"" << file << "\" could not be opend\n";
+		std::cout << "Error: could not open file.\n";
 		exrate.close();
 		return ;
 	}
@@ -145,21 +162,13 @@ void BTC::convert(const std::string& file)
 			std::stringstream str(line);
 			std::string temp;
 			if (!(str >> date && str >> temp && str >> stramount))
-				throw(std::invalid_argument("Error: bad input format"));
-			if (!isdate(date) || !isvaliddate(date))
-				throw(std::invalid_argument("Error: bad input =>" + date));
+				throw(std::invalid_argument("Error: bad input => " + line ));
+			if (!isDate(date) || !isValidDate(date))
+				throw(std::invalid_argument("Error: bad date input => " + date));
 			if (temp != "|")
-				throw(std::invalid_argument("Error: bad input format"));
-			float sol = isfloat(stramount);
-			if (sol < 0)
-			{
-				if (sol == -1)
-					throw(std::invalid_argument("Error: Not a numebr"));
-				else if (sol == -2)
-					throw(std::invalid_argument("Error: not a positive number."));
-				throw(std::invalid_argument("Error: Out of range number.\n"));
-			}
-			std::cout << date << " => " << stramount << " = " << std::endl;
+				throw(std::invalid_argument("Error: bad input => " + line ));
+			float sol = isFloat(stramount, true);
+			std::cout << date << " => " << stramount << " = " << sol * getRate(date) <<std::endl ;
 		}
 		catch(const std::exception& e)
 		{
