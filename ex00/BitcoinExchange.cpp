@@ -32,6 +32,8 @@ void BTC::populateMap(const std::string& file)
 	{
 		m.clear();
 		getline(exrate, line);
+		if (line != "date,exchange_rate")
+			throw std::invalid_argument("Error: database is corupt\n");
 		while (getline(exrate, line)) {
     		std::stringstream str(line);
 			getline(str, date, ',');
@@ -156,9 +158,16 @@ void BTC::convert(const std::string& file) const
 		return ;
 	}
 	getline(exrate, line);
+	if (line != "date | value")
+		throw(std::invalid_argument("Error: invalid file format"));
 	while (getline(exrate, line)) {
 		try
 		{
+			if (line.empty())
+			{
+				std::cout << std::endl;
+				continue;
+			}
 			std::stringstream str(line);
 			std::string temp;
 			if (!(str >> date && str >> temp && str >> stramount))

@@ -10,6 +10,8 @@ static int operation(int a, int b, std::string str)
 		case '-':
 			return (b - a);
 		case '/':
+			if (a == 0)
+				throw(std::invalid_argument("Division by zero"));
 			return (b / a);
 		case '*':
 			return (b * a);
@@ -42,19 +44,13 @@ void RPN::postfix()
 		else if (word != "")
 		{
 			if (stk.size() < 2)
-			{
-				std::cout << "Expression is invalid\n";
-				return ;
-			}
-			int a = stk.top();
-			stk.pop();
-			int b = stk.top();
-			stk.pop();
+				throw(std::invalid_argument("Error: not enough operands"));
+			int a = stk.top(); stk.pop();
+			int b = stk.top(); stk.pop();
 			stk.push(operation(a, b, word));
 		}
 	}
 	if (stk.size() != 1)
-		std::cout << "Expression in invalid\n";
-	else
-		std::cout << stk.top() << std::endl;
+		throw(std::invalid_argument("Error: too many operands"));
+	std::cout << stk.top() << std::endl;
 }
