@@ -1,25 +1,56 @@
-# include "PmergeMe.hpp"
+#include "PmergeMe.hpp"
 
-PMM::PMM():str(){}
+template <class T, class  F>
+PMM<T,F>::PMM():str(){}
 
-PMM::PMM(const std::string& str):str(str){}
+template <class T, class  F>
+PMM<T, F>::PMM(const std::string& str):str(str){
+	if (!is_valid(str))
+		throw(std::invalid_argument("Error: Invalid input"));
+}
 
-PMM::PMM(char** chrarr)
+template <class T, class  F>
+PMM<T, F>::PMM(char** chrarr)
 {
 	std::string s = " ";
 	for (int i = 0; chrarr[i]; ++i)
 		str += chrarr[i] + s;
+	if (!is_valid(str))
+		throw(std::invalid_argument("Error: Invalid input"));
 }
 
-PMM::PMM(const PMM &other):str(other.str){}
+template <class T, class  F>
+PMM<T, F>::PMM(const PMM &other):str(other.str){}
 
-PMM::~PMM(){}
+template <class T, class  F>
+PMM<T, F>::~PMM(){}
 
-PMM& PMM::operator=(const PMM &other){
+template <class T, class  F>
+PMM<T, F>& PMM<T, F>::operator=(const PMM &other){
 	str = other.str;
 	return *this;
 }
 
+bool is_valid(const std::string& str)
+{
+	size_t	num = 0;
+
+	for (size_t i = 0; str[i]; ++i)
+	{
+		if (std::isspace(str[i]))
+		{
+			num = 0;
+			continue ;
+		}
+		if (!isdigit(str[i]))
+			return (false);
+		num = num * 10 + (str[i] - '0');
+		if (num >> 31)
+			return (false);
+	}
+	return (true);
+}
+/* 
 void merge(vector &nums, int low, int mid, int high) {
 	int n1 = mid - low + 1;
 	int n2 = high - mid;
@@ -133,61 +164,134 @@ void PMM::sortVector1() const
 	// std::cout << std::endl;
 }
 
-void mergelist(list &nums, int low, int mid, int high) {
+// void mergelist(list &nums, int low, int mid, int high) {
+// 	int n1 = mid - low + 1;
+// 	int n2 = high - mid;
+// 	std::pair<int,int> left[n1], right[n2];
+// 	list::iterator l_first = nums.begin();
+// 	list::iterator r_first = nums.begin();
+// 	std::advance(l_first, low);
+// 	std::advance(r_first, mid + 1);
+// 	list::iterator pos = l_first;
+// 	for (int i = 0; i < n1; i++) {
+// 		left[i] = *(l_first++);
+// 	}
+// 	for (int j = 0; j < n2; j++) {
+// 		right[j] = *(r_first++);
+// 	}
+// 	int i = 0, j = 0;
+// 	while (i < n1 && j < n2) {
+// 		if (left[i] <= right[j]) {
+// 			*pos = left[i];
+// 			i++;
+// 		} else {
+// 			*pos = right[j];
+// 			j++;
+// 		}
+// 		++pos;
+// 	}
+// 	while (i < n1) {
+// 		*pos = left[i];
+// 		i++;
+// 		++pos;
+// 	}
+// 	while (j < n2) {
+// 		*pos = right[j];
+// 		j++;
+// 		++pos;
+// 	}
+// }
+	
+// void printpair(list lst)
+// {
+// 	list::iterator it = lst.begin();
+// 	while (it != lst.end()) {
+// 		std::cout << "[" << it->first << " " 
+// 			<< it->second << "] ";
+// 		++it;
+// 		if (it != lst.end())
+// 			std::cout << "-> ";
+// 		else
+// 			std::cout << std::endl;
+// 	}
+// }
+
+// void printlist(std::list<int> lst)
+// {
+// 	std::list<int>::iterator it = lst.begin();
+// 	while (it != lst.end()) {
+// 		std::cout << *it << " ";
+// 		++it;
+// 		if (it != lst.end())
+// 			std::cout << "-> ";
+// 		else
+// 			std::cout << std::endl;
+// 	}
+// }
+
+// void mergeSort(list &nums, int low, int high)
+// {
+// 	if (low < high) {
+// 		int mid = low + (high - low) / 2;
+// 		// printpair(nums);
+// 		mergeSort(nums, low, mid);
+// 		mergeSort(nums, mid + 1, high);
+// 		merge(nums, low, mid, high);
+// 	}
+// 	return;
+// }
+*/
+
+
+template <typename T>
+void merge(T &nums, int low, int mid, int high)
+{
 	int n1 = mid - low + 1;
 	int n2 = high - mid;
 	std::pair<int,int> left[n1], right[n2];
-	list::iterator l_first = nums.begin();
-	list::iterator r_first = nums.begin();
+	typename T::iterator l_first = nums.begin(), r_first = nums.begin();
 	std::advance(l_first, low);
 	std::advance(r_first, mid + 1);
-	list::iterator pos = l_first;
-	for (int i = 0; i < n1; i++) {
+	typename T::iterator pos = l_first;
+
+	for (int i = 0; i < n1; i++)
 		left[i] = *(l_first++);
-	}
-	for (int j = 0; j < n2; j++) {
+	for (int j = 0; j < n2; j++)
 		right[j] = *(r_first++);
-	}
 	int i = 0, j = 0;
-	while (i < n1 && j < n2) {
-		if (left[i] <= right[j]) {
-			*pos = left[i];
-			i++;
-		} else {
-			*pos = right[j];
-			j++;
-		}
-		++pos;
+	for (; i < n1 && j < n2; ++pos)
+	{
+		if (left[i] <= right[j])
+			*pos = left[i++];
+		else
+			*pos = right[j++];
 	}
 	while (i < n1) {
-		*pos = left[i];
-		i++;
+		*pos = left[i++];
 		++pos;
 	}
 	while (j < n2) {
-		*pos = right[j];
-		j++;
+		*pos = right[j++];
 		++pos;
 	}
 }
-	
-void printpair(list lst)
+
+template <typename T>
+void mergesort(T &nums, int low, int high)
 {
-	list::iterator it = lst.begin();
-	while (it != lst.end()) {
-		std::cout << "[" << it->first << " " 
-			<< it->second << "] ";
-		++it;
-		if (it != lst.end())
-			std::cout << "-> ";
-		else
-			std::cout << std::endl;
+	if (low < high) {
+		int mid = low + (high - low) / 2;
+		mergesort(nums, low, mid);
+		mergesort(nums, mid + 1, high);
+		merge(nums, low, mid, high);
 	}
+	return;
 }
 
-void printlist(std::list<int> lst)
+template <typename T>
+void printnums(T lst)
 {
-	std::list<int>::iterator it = lst.begin();
+	typename T::iterator it = lst.begin();
 	while (it != lst.end()) {
 		std::cout << *it << " ";
 		++it;
@@ -198,29 +302,13 @@ void printlist(std::list<int> lst)
 	}
 }
 
-void mergeSort(list &nums, int low, int high)
+template <class T, class F>
+void PMM<T, F>::sort()
 {
-	if (low < high) {
-		int mid = low + (high - low) / 2;
-		printpair(nums);
-		mergeSort(nums, low, mid);
-		mergeSort(nums, mid + 1, high);
-		mergelist(nums, low, mid, high);
-	}
-	return;
-}
-
-
-void PMM::sortListPairs() const
-{
-	list pairs;
+	T pairs;
 	std::stringstream ss(str);
 	size_t num;
-	for(size_t i = 0; str[i]; ++i)
-	{
-		if (! (isdigit(str[i]) || isspace(str[i])))
-			throw(std::invalid_argument("Invalid input"));
-	}
+	
 
 	std::pair<int, int> temp_pair;
 	int i = 0, lone_num = -1;
@@ -239,27 +327,21 @@ void PMM::sortListPairs() const
 	if (i % 2 == 1)
 		lone_num = temp_pair.first;
 
-	printpair(pairs);
-	std::cout << pairs.size() << " " << i/2 << std::endl;
-	mergeSort(pairs, 0, pairs.size() - 1);
-	printpair(pairs);
+	mergesort(pairs, 0, pairs.size() - 1);
 	std::cout << "Lone number: " << lone_num << std::endl;
 
 
-	std::list<int> nums;
+	F nums;
 	nums.push_back(pairs.begin()->second);
 	nums.push_back(pairs.begin()->first);
-	list::iterator it = pairs.begin();
+	typename T::iterator it = pairs.begin();
 	++it;
 	for (; it != pairs.end(); ++it)
 	{
 		nums.push_back(it->first);
-		std::cout << "number to be inserted: " << it->second << std::endl;
-		std::cout << "lower bound of number: " << *std::lower_bound(nums.begin(), nums.end(), it->second) << std::endl;
-		nums.insert(std::lower_bound(nums.begin(), nums.end(), it->second), it->second);
-		printlist(nums);
+		nums.insert(std::lower_bound(nums.begin(), --nums.end(), it->second), it->second);
 	}
 	if (lone_num != -1)
 		nums.insert(std::lower_bound(nums.begin(), nums.end(), lone_num), lone_num);
-	printlist(nums);
+	printnums(nums);
 }
