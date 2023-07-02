@@ -6,7 +6,7 @@
 #    By: ayassin <ayassin@student.42abudhabi.ae>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/24 18:00:42 by ayassin           #+#    #+#              #
-#    Updated: 2023/06/24 19:59:52 by ayassin          ###   ########.fr        #
+#    Updated: 2023/07/03 02:40:07 by ayassin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ SRC = PmergeMe.cpp main.cpp
 
 CC = c++
 
-CFLAGS = -Wall -Werror -Wextra #-std=c++98
+CFLAGS = -Wall -Werror -Wextra -std=c++98
 
 OBJS = $(SRC:.cpp=.o)
 
