@@ -79,8 +79,9 @@ int main(int argc, char** argv) {
 		
 		// clock_t start = clock();
 		PMM a(&argv[1]);
-		timing(a, &PMM::sortVector);
-		timing(a, &PMM::sortVector1);
+		a.sortListPairs();
+		// timing(a, &PMM::sortVector);
+		// timing(a, &PMM::sortVector1);
 		// a.sortVector();
 		// a.sortVector1();
 		// clock_t end = clock();
@@ -93,42 +94,3 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 }
-// int main() {
-// 	int input[] = {9, 5, 2, 7, 1, 8, 3, 6, 4};
-// 	std::vector<int> nums;
-// 	for (int i = 0; i < 9; i++) {
-// 		nums.push_back(input[i]);
-// 		std::cout << nums[i] << " ";
-// 	}
-// 	std::cout << "\n";
-
-// 	mergeSort(nums, 0, nums.size() - 1);
-
-// 	std::cout << "Sorted array: ";
-// 	for (std::vector<int>::iterator it = nums.begin(); it != nums.end(); ++it) {
-// 		std::cout << *it << " ";
-// 	}
-// 	std::cout << std::endl;
-
-// 	return 0;
-// }
-	
-// int main() {
-//	 int input[] = {9, 5, 2, 7, 1, 8, 3, 6, 4};
-//	 std::vector<int> nums;
-//	 for (int i = 0; i < 9; i++) {
-//		 nums.push_back(input[i]);
-//		 std::cout << nums[i] << " ";
-//	 }
-//	 std::cout << "\n";
-//	 insertSort(nums, 0, nums.size());
-
-//	 std::cout << "Sorted array: ";
-//	 for (std::vector<int>::iterator it = nums.begin(); it != nums.end(); ++it)
-//	 {
-//		 std::cout << *it << " ";
-//	 }
-//	 std::cout << std::endl;
-
-//	 return 0;
-// }

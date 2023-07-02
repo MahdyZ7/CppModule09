@@ -3,9 +3,11 @@
 
 #include <iostream>
 #include <vector>
+#include <list>
 #include <sstream>
 
 typedef std::vector<size_t> vector;
+typedef std::list<std::pair<int,int> > list;
 class PMM
 {
 	public:
@@ -18,7 +20,7 @@ class PMM
 		PMM& operator=(const PMM& other);
 		void sortVector() const;
 		void sortVector1() const;
-		void sortVectorPairs() const;
+		void sortListPairs() const;
 	
 	private:
 		std::string str;
