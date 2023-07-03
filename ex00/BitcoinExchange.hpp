@@ -27,7 +27,7 @@ class BTC
 		double getRate(const std::string& str) const;
 	
 	private:
-		static float isFloat(const std::string& str, bool max);
+		static double isFloat(const std::string& str, bool max);
 		static bool isDate(const std::string& str);
 		static bool isValidDate(const std::string& str);
 		mymap m;

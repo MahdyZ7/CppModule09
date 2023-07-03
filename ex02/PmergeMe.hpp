@@ -18,40 +18,35 @@ typedef std::vector<int>					intvector;
 
 
 bool is_valid(const std::string& str);
+void print_time(size_t size, std::string contype, clock_t start, clock_t end);
 
-template <typename T>
-void merge(T &nums, int low, int mid, int high);
-
-template <typename T>
-void mergesort(T &nums, int low, int high);
-
-template <class T>
-void printnums(T lst);
+template <typename T> void	merge(T &nums, int low, int mid, int high);
+template <typename T> void	mergesort(T &nums, int low, int high);
+template <class T> void		printnums(T lst);
 
 template <class T = pairlist, class  F = intlist >
 class PMM
 {
 	public:
 		PMM();
-		explicit  PMM(const std::string& str);
-		explicit  PMM(char** chrarr);
+		PMM(const std::string& str);
+		PMM(char** chrarr);
 		PMM(const PMM& other);
 		~PMM();
 
-		PMM& operator=(const PMM& other);
-		void sort();
-		void printNums() const;
+		PMM&		operator=(const PMM& other);
+		void		sort();
+		void		printNums() const;
 		std::string getStr() const;
+		size_t		getSize() const;
 	
 	private:
 		std::string	str;
 		F			nums;
-		size_t		length;
-	
 };
 
 template <class T, class  F>
-PMM<T,F>::PMM():str(){}
+PMM<T,F>::PMM():str(), nums(){}
 
 template <class T, class  F>
 PMM<T, F>::PMM(const std::string& str):str(str){
@@ -78,22 +73,21 @@ PMM<T, F>::~PMM(){}
 template <class T, class  F>
 PMM<T, F>& PMM<T, F>::operator=(const PMM &other){
 	str = other.str;
+	nums = other.nums;
 	return *this;
 }
 
 template <class T, class F>
 void PMM<T, F>::sort()
 {
-	T pairs;
-	std::stringstream ss(str);
-	size_t num;
-	
+	T 					pairs;
+	size_t				num, count = 0;
+	std::stringstream	ss(str);
+	std::pair<int, int>	temp_pair;	
 
-	std::pair<int, int> temp_pair;
-	int i = 0;
-	for (; ss >> num; ++i)
+	for (; ss >> num; ++count)
 	{
-		if (i % 2 == 0)
+		if (count % 2 == 0)
 			temp_pair.first = num;
 		else
 		{
@@ -103,19 +97,13 @@ void PMM<T, F>::sort()
 			pairs.push_back(temp_pair);
 		}
 	}
-
 	mergesort(pairs, 0, pairs.size() - 1);
-
-	nums.push_back(pairs.begin()->second);
-	nums.push_back(pairs.begin()->first);
-	typename T::iterator it = pairs.begin();
-	++it;
-	for (; it != pairs.end(); ++it)
+	for(typename T::iterator it = pairs.begin(); it != pairs.end(); ++it)
 	{
 		nums.push_back(it->first);
 		nums.insert(std::lower_bound(nums.begin(), --nums.end(), it->second), it->second);
 	}
-	if (i % 2 == 1)
+	if (count % 2 == 1)
 		nums.insert(std::lower_bound(nums.begin(), nums.end(),  temp_pair.first),  temp_pair.first);
 }
 
@@ -134,6 +122,12 @@ template <class T, class F>
 std::string PMM<T, F>::getStr() const
 {
 	return str;
+}
+
+template <class T, class F>
+size_t PMM<T, F>::getSize() const
+{
+	return nums.size();
 }
 
 template <typename T>

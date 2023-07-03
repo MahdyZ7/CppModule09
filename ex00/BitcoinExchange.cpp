@@ -40,7 +40,7 @@ void BTC::populateMap(const std::string& file)
 			getline(str, rate, ',');
 			if (!(isDate(date) && isFloat(rate, false) >= 0 && isValidDate(date)))
 			{
-				std::cout << "Invalid: " << date << " " << rate;
+				std::cout << "Invalid: " << date << " " << rate << std::endl;
 				throw(std::invalid_argument("Error: database is corrupt"));
 			}
 			std::stringstream(rate) >> d;
@@ -52,9 +52,9 @@ void BTC::populateMap(const std::string& file)
 	throw(std::invalid_argument("Error: could not open file."));
 }
 
-float BTC::isFloat(const std::string& str, bool max)
+double BTC::isFloat(const std::string& str, bool max)
 {
-	int		num;
+	double	num;
 	size_t	dec = 0;
 
 	for(int i = 0; str[i]; ++i)

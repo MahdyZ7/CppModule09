@@ -6,13 +6,15 @@
 #    By: ayassin <ayassin@student.42abudhabi.ae>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/24 18:00:42 by ayassin           #+#    #+#              #
-#    Updated: 2023/06/24 21:38:19 by ayassin          ###   ########.fr        #
+#    Updated: 2023/07/03 08:33:58 by ayassin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = btc
 
 SRC = BitcoinExchange.cpp main.cpp
+
+HEADERS = BitcoinExchange.hpp
 
 CC = c++
 
@@ -25,7 +27,7 @@ all : $(NAME)
 .cpp.o:
 	$(CC) $(CFLAGS) -c $^ -o $@
 
-$(NAME) : $(OBJS)
+$(NAME) : $(OBJS) $(HEADERS)
 	$(CC) $(CFLAGS) $(SRC) -o $(NAME)
 
 clean:

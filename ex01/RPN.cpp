@@ -1,6 +1,6 @@
 #include "RPN.hpp"
 
-static int operation(int a, int b, std::string str)
+static double operation(double a, double b, std::string str)
 {
 	int op = str[0];
 	switch (op)
@@ -32,7 +32,7 @@ RPN &RPN::operator=(const RPN& other)
 
 void RPN::postfix()
 {
-	std::stack<int> stk;
+	std::stack<double> stk;
 	std::string word;
     std::stringstream strstream(this->exp);
 	int x;

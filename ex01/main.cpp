@@ -1,6 +1,6 @@
 #include "RPN.hpp"
 
-bool valid_input(std::string str)
+static bool valid_input(std::string str)
 {
 	std::string op = "*/+-";
 	for (int i = 0; str[i] != '\0'; ++i)
