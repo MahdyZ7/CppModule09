@@ -1,5 +1,5 @@
 #ifndef PMERGEME_HPP
-#define PMERGE_HPP
+#define PMERGEME_HPP
 
 #include <iostream>
 #include <iomanip>
